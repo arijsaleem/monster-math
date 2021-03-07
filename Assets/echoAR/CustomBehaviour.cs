@@ -9,6 +9,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class CustomBehaviour : MonoBehaviour
 {
@@ -16,10 +17,13 @@ public class CustomBehaviour : MonoBehaviour
     public Entry entry;
 
     [SerializeField]
-    private TextMesh OverlayText { get; set;}
+    private TextMeshPro OverlayText;
 
     [SerializeField]
-    private string OverlayMathText { get;set; }
+    private string OverlayMathText;
+    
+    private int textOffset = 2;
+    private GameObject childObj;
 
     /// <summary>
     /// EXAMPLE BEHAVIOUR
@@ -39,11 +43,32 @@ public class CustomBehaviour : MonoBehaviour
             // Set name
             this.gameObject.name = value;
         }
+
+        ////////////////////////TEXT MESH CODE//////////////////////
+        childObj = new GameObject();
+        //Make block to be parent of this gameobject
+        childObj.transform.parent = this.gameObject.transform;
+        childObj.name = "Monster Math Text";
+
+        
+
+        //Create TextMesh and modify its properties
+        OverlayText = childObj.AddComponent<TextMeshPro>();
+        OverlayText.text = "Monster";
+        OverlayText.fontSize = 1.5f;
+        childObj.GetComponent<RectTransform>().anchoredPosition = this.gameObject.transform.renderer.bounds.center;
+        
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        //Set postion of the TextMesh with offset
+        //childObj.anchoredPosition = AnchorPosition.Center;
+        //childObj.GetComponent<TextMeshPro>().alignment = TextAlignmentOptions.Center;
+        OverlayText.alignment = TextAlignmentOptions.Center;
+        OverlayText.transform.position = new Vector3(this.gameObject.transform.position.x,  this.gameObject.transform.position.y + textOffset, this.gameObject.transform.position.z);
 
     }
 }
