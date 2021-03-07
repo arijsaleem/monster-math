@@ -15,6 +15,12 @@ public class CustomBehaviour : MonoBehaviour
     [HideInInspector]
     public Entry entry;
 
+    [SerializeField]
+    private TextMesh OverlayText { get; set;}
+
+    [SerializeField]
+    private string OverlayMathText { get;set; }
+
     /// <summary>
     /// EXAMPLE BEHAVIOUR
     /// Queries the database and names the object based on the result.

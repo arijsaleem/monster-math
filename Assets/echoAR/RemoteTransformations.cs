@@ -27,6 +27,7 @@ public class RemoteTransformations : MonoBehaviour
     private Vector3 initialWorldSpacePosition;
     private Quaternion initialWorldSpaceRotation;
     private Vector3 initialScale;
+    bool mvmt_started = false;
 
     // Use this for initialization
     void Start()
@@ -37,6 +38,7 @@ public class RemoteTransformations : MonoBehaviour
             initialWorldSpacePosition = (this.gameObject.transform.parent) ? this.gameObject.transform.parent.transform.position : this.gameObject.transform.position;
             initialWorldSpaceRotation = this.gameObject.transform.rotation;
             initialScale = this.gameObject.transform.localScale;
+        
         }
         catch (System.Exception e)
         {
@@ -49,6 +51,7 @@ public class RemoteTransformations : MonoBehaviour
     {
         string value = "";
         float positionFactor = 1f;
+        float mvmt_speed = 0.05f;
 
         // Attach to parent
         if (this.gameObject.transform.parent) {
@@ -70,7 +73,20 @@ public class RemoteTransformations : MonoBehaviour
         {
             positionOffest.z = float.Parse(value, CultureInfo.InvariantCulture);
         }
-        this.gameObject.transform.position += (initialWorldSpacePosition + positionOffest * positionFactor) - transform.forward * Time.deltaTime;
+        
+        if (mvmt_started == false) {
+            this.gameObject.transform.position = initialWorldSpacePosition + positionOffest * positionFactor;
+            mvmt_started = true;
+        }
+        else {
+            if (entry.getAdditionalData().TryGetValue("speed", out value)) {
+                mvmt_speed = float.Parse(value, CultureInfo.InvariantCulture);
+            }
+            Vector3 origin = new Vector3(0, 0, 0);
+            this.gameObject.transform.position = Vector3.MoveTowards(transform.position, origin, mvmt_speed);
+        }
+
+        
 
         // Handle spinning
         float speed = 150;
